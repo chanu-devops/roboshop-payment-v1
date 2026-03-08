@@ -6,22 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run a One line test
-        run: echo pytest test.py
-
-  docker:
-    needs: test
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-      - name: Docker Login for pushing image
-        run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 444206648334.dkr.ecr.us-east-1.amazonaws.com
-      - name: Docker Build
-        run: docker build -t 444206648334.dkr.ecr.us-east-1.amazonaws.com/payment .
-      - name: Docker Push
-        run: docker push 444206648334.dkr.ecr.us-east-1.amazonaws.com/payment
-
+  ci-cd-common:
+    uses: chanu-devops/reusable-CICD-yaml/.github/workflows/cicd.yaml@main
+    with:
+      app-type: python
+      micro-services: payment
